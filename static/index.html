@@ -1,26 +1,51 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Dice Roller Client</title>
-    <script>
-        async function rollDice() {
-            const response = await fetch('https://<your-app-name>.azurewebsites.net/api/roll?sides=6');
-            const data = await response.json();
-            document.getElementById('result').innerText = `Rolled: ${data.rollResult} (sides: ${data.sides})`;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roller API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
         }
-
-        async function callInvalidAPI() {
-            const response = await fetch('https://invalid-api-url/api/roll?sides=6');
-            const data = await response.json();
-            document.getElementById('result').innerText = `Rolled: ${data.rollResult} (sides: ${data.sides})`;
+        h1 {
+            margin-bottom: 20px;
         }
-    </script>
+        p {
+            margin: 10px 0;
+            text-align: center;
+        }
+        a {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Dice Roller Client!</h1>
-    <button onclick="rollDice()">Roll Dice</button>
-    <button onclick="callInvalidAPI()">Call Invalid API</button>
-    <p id="result"></p>
+
+    <h1>Welcome to the Dice Roller API</h1>
+    <p>This is a simple RESTful API for rolling dice.</p>
+    <p>Use the following endpoints to interact with the API:</p>
+    <ul>
+        <li><strong>/api/roll</strong>: Rolls a dice and returns the result.</li>
+    </ul>
+    <p>To test the API, you can use tools like <a href="https://www.postman.com/" target="_blank">Postman</a> or simply make requests from your browser.</p>
+    <a href="https://green-water-03534e410.5.azurestaticapps.net/" target="_blank">Go to the Dice Roller Web App</a>
+
 </body>
 </html>
