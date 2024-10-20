@@ -1,92 +1,56 @@
 const express = require('express');
-const cors = require("cors");
-const url = require('url');
-
+const cors = require('cors');
 const app = express();
+
 const port = process.env.PORT || 3000;
-const majorVersion = 1;
-const minorVersion = 3;
 
 app.use(cors({ origin: '*' }));
 
-// Implement a custom About page.
-app.get('/about', (request, response) => {
-    console.log('Calling "/about" on the Node.js server.');
-    response.type('text/plain');
-    response.send('About Dice Roller API v' + majorVersion + '.' + minorVersion);
-});
-
-// Ping endpoint for testing connectivity
-app.get('/api/ping', (request, response) => {
-    console.log('Calling "/api/ping"');
-    response.type('text/plain');
-    response.send('ping response');
+// Serve the HTML page
+app.get('/', (req, res) => {
+    res.send(`
+        <!doctype html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8" />
+            <title>Dice Roller API</title>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                button { padding: 10px; margin: 5px; }
+                #result { margin-top: 10px; font-size: 18px; }
+            </style>
+        </head>
+        <body>
+            <h1>Welcome to the Dice Roller API!</h1>
+            <p>This API can generate random numbers.</p>
+            <button onclick="rollDice()">Roll Dice</button>
+            <div id="result"></div>
+            <script>
+                async function rollDice() {
+                    const response = await fetch('/api/roll?sides=6');
+                    const data = await response.json();
+                    document.getElementById('result').innerText = \`Rolled: \${data.rollResult} (sides: \${data.sides})\`;
+                }
+            </script>
+        </body>
+        </html>
+    `);
 });
 
 // RESTful API for rolling a dice with user-defined sides
-app.get('/api/roll-dice', (request, response) => {
-    const sides = parseInt(request.query.sides) || 6; // Defaults to 6-sided dice
+app.get('/api/roll', (req, res) => {
+    const sides = parseInt(req.query.sides) || 6; // Defaults to 6-sided dice
     const rollResult = Math.floor(Math.random() * sides) + 1;
     console.log(`Rolled a ${sides}-sided dice, result: ${rollResult}`);
-    response.json({ sides, rollResult });
+    res.json({ sides, rollResult });
 });
 
-// Return Batman as JSON (if still needed)
-const batMan = {
-    "firstName": "Bruce",
-    "lastName": "Wayne",
-    "preferredName": "Batman",
-    "email": "darkknight@lewisu.edu",
-    "phoneNumber": "800-bat-mann",
-    "city": "Gotham",
-    "state": "NJ",
-    "zip": "07101",
-    "lat": "40.73",
-    "lng": "-74.17",
-    "favoriteHobby": "Flying",
-    "class": "cpsc-24700-001",
-    "room": "AS-104-A",
-    "startTime": "2 PM CT",
-    "seatNumber": "",
-    "inPerson": [
-        "Monday",
-        "Wednesday"
-    ],
-    "virtual": [
-        "Friday"
-    ]
-};
-
-app.get('/batman', (request, response) => {
-    console.log('Calling "/batman" on the Node.js server.');
-    response.type('application/json');
-    response.send(JSON.stringify(batMan));
+// Custom 404 page
+app.use((req, res) => {
+    res.status(404).send('404 - Not Found');
 });
 
-// Load your JSON data
-const favoritePlaces = require('./FavoritePlaces.json');
-
-// Create a route that serves the JSON data
-app.get('/api/favorite-places', (req, res) => {
-    res.json(favoritePlaces);
+// Start the server
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
 });
-
-// Custom 404 page.
-app.use((request, response) => {
-    response.type('text/plain');
-    response.status(404);
-    response.send('404 - Not Found');
-});
-
-// Custom 500 page.
-app.use((err, request, response, next) => {
-    console.error(err.message);
-    response.type('text/plain');
-    response.status(500);
-    response.send('500 - Server Error');
-});
-
-app.listen(port, () => console.log(
-    `Express started at "http://localhost:${port}"\n` +
-    `Press Ctrl-C to terminate.`
-));
