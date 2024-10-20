@@ -4,7 +4,17 @@ const app = express();
 
 const port = process.env.PORT || 3000;
 
-app.use(cors({ origin: '*' }));
+// Allow CORS only from specific origin (change this to the URL of your Azure static website)
+app.use(cors({
+    origin: function (origin, callback) {
+        // Change 'http://localhost:3000' to your static site URL when deploying
+        if (origin === 'http://localhost:3000' || !origin) { // Allow local development
+            callback(null, true);
+        } else {
+            callback(new Error('CORS policy: Not allowed by CORS'));
+        }
+    }
+}));
 
 // Serve the HTML page
 app.get('/', (req, res) => {
@@ -27,9 +37,14 @@ app.get('/', (req, res) => {
             <div id="result"></div>
             <script>
                 async function rollDice() {
-                    const response = await fetch('/api/roll?sides=6');
-                    const data = await response.json();
-                    document.getElementById('result').innerText = \`Rolled: \${data.rollResult} (sides: \${data.sides})\`;
+                    try {
+                        const response = await fetch('/api/roll?sides=6');
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        const data = await response.json();
+                        document.getElementById('result').innerText = \`Rolled: \${data.rollResult} (sides: \${data.sides})\`;
+                    } catch (error) {
+                        document.getElementById('result').innerText = \`Error: \${error.message}\`;
+                    }
                 }
             </script>
         </body>
