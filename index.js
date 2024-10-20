@@ -34,6 +34,15 @@ app.get('/api/ping', (request, response) => {
 	response.send('ping response')
 })
 
+// RESTful API for rolling a dice with user-defined sides
+app.get('/api/roll-dice', (request, response) => {
+    const sides = parseInt(request.query.sides) || 6; // Defaults to 6-sided dice
+    const rollResult = Math.floor(Math.random() * sides) + 1;
+    console.log(`Rolled a ${sides}-sided dice, result: ${rollResult}`);
+    response.json({ sides, rollResult });
+});
+
+
 // Return the value of 2 plus 2.
 app.get('/2plus2', (request, response) => {
 	console.log('Calling "/2plus2" on the Node.js server.')

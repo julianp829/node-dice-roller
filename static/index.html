@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<title>MERNa-NE</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test Page</title>
 </head>
 <body>
-	<h1>MERNa: This is a Node.js and Express hosted Microsoft Azure Template</h1>
-	<p>This repository serves as a template that can be used to create a Node.js and Express based website that can easily
-	be hosted on Microsoft Azure.</p><br />
+    <h1>Dice Roller API Test</h1>
+    <button id="rollButton">Roll a 6-sided Dice</button>
+    <p id="result"></p>
 
-	MERNa stands for MongoDB, Express, React, abd Node on Azure.
-
-	Additional application functionality includes:<br />
-	<a href="fetching-from-server.html">Accessing Node.js Server-Side Application Programming Interfaces (APIs)</a><br />
-	<a href="fetching-remote-dog-breeds.html">Accessing Remote Application Programming Interfaces (APIs)</a>
+    <script>
+        document.getElementById('rollButton').addEventListener('click', function() {
+            fetch('/api/roll-dice')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerText = `You rolled a ${data.result} on a ${data.sides}-sided dice!`;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
 </body>
 </html>
