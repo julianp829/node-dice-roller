@@ -11,14 +11,16 @@
     <p id="result"></p>
 
     <script>
-        document.getElementById('rollButton').addEventListener('click', function() {
-            fetch('/api/roll-dice')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('result').innerText = `You rolled a ${data.result} on a ${data.sides}-sided dice!`;
-                })
-                .catch(error => console.error('Error:', error));
-        });
-    </script>
+		document.getElementById('rollButton').addEventListener('click', function() {
+			fetch('https://https://node-dice-roller-jp-hmgdgqbmfbd9fubr.centralus-01.azurewebsites.net/api/roll-dice')
+				.then(response => response.json())
+				.then(data => {
+					// Make sure both sides and rollResult are displayed correctly
+					document.getElementById('result').innerText = `You rolled a ${data.rollResult} on a ${data.sides}-sided dice!`;
+				})
+				.catch(error => console.error('Error:', error));
+		});
+	</script>
+	
 </body>
 </html>
