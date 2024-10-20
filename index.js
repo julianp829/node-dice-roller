@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000;
 app.use(cors({
     origin: function (origin, callback) {
         // Change 'http://localhost:3000' to your static site URL when deploying
-        if (origin === 'http://localhost:3000' || !origin) { // Allow local development
+        if (origin === 'https://green-water-03534e410.5.azurestaticapps.net/' || !origin) { // Allow local development
             callback(null, true);
         } else {
             callback(new Error('CORS policy: Not allowed by CORS'));
